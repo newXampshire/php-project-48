@@ -1,0 +1,26 @@
+{
+    "name": "hexlet/code",
+    "description": "difference calculator",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "New Xampshire",
+            "email": "gun19sinking@ya.ru"
+        }
+    ],
+    "bin": [
+        "bin/gendiff"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        }
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.9"
+    },
+    "require": {
+        "docopt/docopt": "^1.0"
+    }
+}
