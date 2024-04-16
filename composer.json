@@ -14,8 +14,14 @@
     ],
     "autoload": {
         "psr-4": {
-            "Hexlet\\Code\\": "src/"
-        }
+            "Hexlet\\Code\\Differ\\": "src/"
+        },
+        "files": [
+            "src/Controllers/Controller.php",
+            "src/Differ/Differ.php",
+            "src/Formatters/JsonFormatter.php",
+            "src/Handlers/FileHandler.php"
+        ]
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.9"

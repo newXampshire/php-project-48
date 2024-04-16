@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+use function Hexlet\Code\Differ\Controllers\genDiff;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $doc = <<<DOC
@@ -17,4 +19,10 @@ Options:
   --format <fmt>                Report format [default: stylish]
 DOC;
 
-Docopt::handle($doc);
+$args = Docopt::handle($doc)->args;
+
+echo genDiff(
+    $args['<firstFile>'],
+    $args['<secondFile>'],
+    $args['--format'],
+);
