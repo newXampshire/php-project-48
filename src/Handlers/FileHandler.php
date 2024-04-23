@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hexlet\Code\Differ\Handlers;
 
 use Exception;
+use Throwable;
 
 use function Hexlet\Code\Differ\Differ\generateDifference;
 
@@ -33,8 +34,11 @@ function parse(string $fileName): array
 
 function prepareJson(string $fileName): array
 {
-    $file = file_get_contents(__DIR__ . '/../../files/json/' . $fileName);
-    if ($file === false) {
+    try {
+        if (($file = file_get_contents(__DIR__ . '/../../files/json/' . $fileName)) === false) {
+            throw new Exception();
+        }
+    } catch (Throwable) {
         throw new Exception('Could not read file');
     }
 

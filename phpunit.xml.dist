@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         processIsolation="true"
+         executionOrder="random"
+         cacheResult="false">
+    <php>
+        <ini name="display_errors" value="true"/>
+    </php>
+    <testsuites>
+        <testsuite name="Plesk Common TestSuite">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

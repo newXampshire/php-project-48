@@ -24,7 +24,7 @@ function generateDifference(array $old, array $new): array
         }
     }
 
-    foreach (array_diff($new, $old) as $key => $newItem) {
+    foreach (array_diff_assoc($new, $old) as $key => $newItem) {
         $result[PREFIX_NEW_VALUE . $key] = $newItem;
     }
 
