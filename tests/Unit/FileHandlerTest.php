@@ -7,9 +7,11 @@ namespace Tests\Unit;
 use Exception;
 use phpmock\Mock;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Yaml\Yaml;
 
 use function Hexlet\Code\Differ\Handlers\parse;
 use function Hexlet\Code\Differ\Handlers\prepareJson;
+use function Hexlet\Code\Differ\Handlers\prepareYaml;
 
 class FileHandlerTest extends TestCase
 {
@@ -18,6 +20,11 @@ class FileHandlerTest extends TestCase
         self::assertEquals(
             json_decode(file_get_contents(__DIR__ . '/../../files/json/file1.json'), true),
             parse('file1.json')
+        );
+
+        self::assertEquals(
+            Yaml::parseFile(__DIR__ . '/../../files/yaml/file1.yaml'),
+            parse('file1.yaml')
         );
     }
 
@@ -29,15 +36,7 @@ class FileHandlerTest extends TestCase
         parse('file1.txt');
     }
 
-    function testParseJsonSuccess(): void
-    {
-        self::assertEquals(
-            json_decode(file_get_contents(__DIR__ . '/../../files/json/file1.json'), true),
-            prepareJson('file1.json')
-        );
-    }
-
-    function testParseJsonWhenFileGetContentsReturnFalse(): void
+    function testParseWhenFileGetContentsReturnFalse(): void
     {
         $fileName = 'some.json';
 
@@ -47,18 +46,38 @@ class FileHandlerTest extends TestCase
         self::expectException(Exception::class);
         self::expectExceptionMessage('Could not read file');
 
-        prepareJson($fileName);
+        parse($fileName);
 
         $mock->disable();
     }
 
-    function testParseJsonWithNotExistentFile(): void
+    function testParseWithNotExistentFile(): void
     {
         $fileName = 'some.json';
 
         self::expectException(Exception::class);
         self::expectExceptionMessage('Could not read file');
 
-        prepareJson($fileName);
+        parse($fileName);
+    }
+
+    function testParseJsonSuccess(): void
+    {
+        $file = file_get_contents(__DIR__ . '/../../files/json/file1.json');
+
+        self::assertEquals(
+            json_decode($file, true),
+            prepareJson($file)
+        );
+    }
+
+    function testParseYamlSuccess(): void
+    {
+        $file = file_get_contents(__DIR__ . '/../../files/yaml/file1.yaml');
+
+        self::assertEquals(
+            Yaml::parse($file),
+            prepareYaml($file)
+        );
     }
 }

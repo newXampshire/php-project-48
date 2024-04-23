@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hexlet\Code\Differ\Handlers;
 
 use Exception;
+use Symfony\Component\Yaml\Yaml;
 use Throwable;
 
 use function Hexlet\Code\Differ\Differ\generateDifference;
@@ -26,26 +27,26 @@ function parse(string $fileName): array
         throw new Exception('Not supported file format');
     }
 
-    return match ($extension) {
-        FORMAT_JSON => prepareJson($fileName),
-        FORMAT_YAML => prepareYaml($fileName)
-    };
-}
-
-function prepareJson(string $fileName): array
-{
     try {
-        if (($file = file_get_contents(__DIR__ . '/../../files/json/' . $fileName)) === false) {
+        if (($file = file_get_contents(__DIR__ . "/../../files/$extension/" . $fileName)) === false) {
             throw new Exception();
         }
     } catch (Throwable) {
         throw new Exception('Could not read file');
     }
 
+    return match ($extension) {
+        FORMAT_JSON => prepareJson($file),
+        FORMAT_YAML => prepareYaml($file)
+    };
+}
+
+function prepareJson(string $file): array
+{
     return json_decode($file, true);
 }
 
-function prepareYaml(string $fileName): array
+function prepareYaml(string $file): array
 {
-    return [];
+    return  Yaml::parse($file);
 }
