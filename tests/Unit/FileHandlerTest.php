@@ -18,12 +18,12 @@ class FileHandlerTest extends TestCase
     function testParseSuccess(): void
     {
         self::assertEquals(
-            json_decode(file_get_contents(__DIR__ . '/../../files/json/file1.json'), true),
+            json_decode(file_get_contents(__DIR__ . '/../../fixtures/json/file1.json'), true),
             parse('file1.json')
         );
 
         self::assertEquals(
-            Yaml::parseFile(__DIR__ . '/../../files/yaml/file1.yaml'),
+            Yaml::parseFile(__DIR__ . '/../../fixtures/yaml/file1.yaml'),
             parse('file1.yaml')
         );
     }
@@ -63,7 +63,7 @@ class FileHandlerTest extends TestCase
 
     function testParseJsonSuccess(): void
     {
-        $file = file_get_contents(__DIR__ . '/../../files/json/file1.json');
+        $file = file_get_contents(__DIR__ . '/../../fixtures/json/file1.json');
 
         self::assertEquals(
             json_decode($file, true),
@@ -73,7 +73,7 @@ class FileHandlerTest extends TestCase
 
     function testParseYamlSuccess(): void
     {
-        $file = file_get_contents(__DIR__ . '/../../files/yaml/file1.yaml');
+        $file = file_get_contents(__DIR__ . '/../../fixtures/yaml/file1.yaml');
 
         self::assertEquals(
             Yaml::parse($file),

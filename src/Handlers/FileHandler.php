@@ -8,16 +8,16 @@ use Exception;
 use Symfony\Component\Yaml\Yaml;
 use Throwable;
 
-use function Hexlet\Code\Differ\Differ\generateDifference;
+use function Hexlet\Code\Differ\Differ\diff;
 
 const FORMAT_JSON = 'json';
 const FORMAT_YAML = 'yaml';
 
 const ALLOWED_FORMATS = [FORMAT_JSON, FORMAT_YAML];
 
-function genDiff(string $oldFileName, string $newFileName): array
+function generateDifference(string $oldFileName, string $newFileName): array
 {
-    return generateDifference(parse($oldFileName), parse($newFileName));
+    return diff(parse($oldFileName), parse($newFileName));
 }
 
 function parse(string $fileName): array
@@ -28,7 +28,7 @@ function parse(string $fileName): array
     }
 
     try {
-        if (($file = file_get_contents(__DIR__ . "/../../files/$extension/" . $fileName)) === false) {
+        if (($file = file_get_contents(__DIR__ . "/../../fixtures/$extension/" . $fileName)) === false) {
             throw new Exception();
         }
     } catch (Throwable) {

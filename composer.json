@@ -19,7 +19,7 @@
         "files": [
             "src/Controllers/Controller.php",
             "src/Differ/Differ.php",
-            "src/Formatters/JsonFormatter.php",
+            "src/Formatters/StylishFormatter.php",
             "src/Handlers/FileHandler.php"
         ]
     },

@@ -35,4 +35,64 @@ DATA;
 
         self::assertEquals($expectedData, format($data));
     }
+
+    public function testFormatJsonSuccessWithMultipleArray(): void
+    {
+        $expectedData = <<<DATA
+{
+    group1: {
+      - baz: bas
+      + baz: bars
+        foo: bar
+      - nest: {
+            key: value
+        }
+      + nest: str
+    }
+  - group2: {
+        abc: 12345
+        deep: {
+            id: 45
+        }
+    }
+  + group3: {
+        deep: {
+            id: {
+                number: 45
+            }
+        }
+        fee: 100500
+    }
+}
+
+DATA;
+
+        $data = [
+            '  group1' => [
+                '- baz' => 'bas',
+                '+ baz' => 'bars',
+                '  foo' => 'bar',
+                '- nest' => [
+                    '  key' => 'value'
+                ],
+                '+ nest' => 'str'
+            ],
+            '- group2' => [
+                '  abc' => 12345,
+                '  deep' => [
+                    '  id' => 45
+                ]
+            ],
+            '+ group3' => [
+                '  deep' => [
+                    '  id' => [
+                        '  number' => 45
+                    ]
+                ],
+                '  fee' => 100500
+            ]
+        ];
+
+        self::assertEquals($expectedData, format($data));
+    }
 }

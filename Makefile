@@ -8,4 +8,10 @@ lint:
 	composer exec --verbose phpcs -- --standard=PSR12 src bin
 
 test:
-	composer test
+	vendor/bin/phpunit
+
+test-with-simple-coverage:
+	vendor/bin/phpunit --coverage-text
+
+test-with-coverage:
+	vendor/bin/phpunit --coverage-clover tests/reports/coverage.xml
