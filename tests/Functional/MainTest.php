@@ -7,8 +7,9 @@ namespace Functional;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-use function Hexlet\Code\Differ\Controllers\genDiff;
+use function Hexlet\Code\Differ\Controllers\generateDifference;
 
+use const Hexlet\Code\Differ\Controllers\FORMAT_PLAIN;
 use const Hexlet\Code\Differ\Controllers\FORMAT_STYLISH;
 
 class MainTest extends TestCase
@@ -26,11 +27,20 @@ class MainTest extends TestCase
     }
 
     #[DataProvider('filesDataProvider')]
-    public function testGenDiff(string $file1, string $file2, string $expected): void
+    public function testGenDiffStylish(string $file1, string $file2, string $expected): void
     {
         self::assertEquals(
-            file_get_contents(__DIR__ . '/../expected/' . $expected),
-            genDiff($file1, $file2, FORMAT_STYLISH)
+            file_get_contents(__DIR__ . '/../expected/stylish/' . $expected),
+            generateDifference($file1, $file2, FORMAT_STYLISH)
+        );
+    }
+
+    #[DataProvider('filesDataProvider')]
+    public function testGenDiffPlain(string $file1, string $file2, string $expected): void
+    {
+        self::assertEquals(
+            file_get_contents(__DIR__ . '/../expected/plain/' . $expected),
+            generateDifference($file1, $file2, FORMAT_PLAIN)
         );
     }
 }

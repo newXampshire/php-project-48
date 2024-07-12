@@ -6,7 +6,7 @@ namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 
-use function Hexlet\Code\Differ\Formatters\format;
+use function Hexlet\Code\Differ\Formatters\Stylish\format;
 
 class JsonFormatterTest extends TestCase
 {
@@ -25,12 +25,24 @@ class JsonFormatterTest extends TestCase
 DATA;
 
         $data = [
-            '- follow' => false,
-            '  host' => 'hexlet.io',
-            '- proxy' => '123.234.53.22',
-            '- timeout' => 50,
-            '+ timeout' => 20,
-            '+ verbose' => true,
+            'follow' => [
+                'removed' => false
+            ],
+            'host' => [
+                'unchanged' => 'hexlet.io'
+            ],
+            'proxy' => [
+                'removed' => '123.234.53.22'
+            ],
+            'timeout' => [
+                'changed' => [
+                    'from' => 50,
+                    'to' => 20
+                ]
+            ],
+            'verbose' => [
+                'added' => true
+            ]
         ];
 
         self::assertEquals($expectedData, format($data));
@@ -68,28 +80,44 @@ DATA;
 DATA;
 
         $data = [
-            '  group1' => [
-                '- baz' => 'bas',
-                '+ baz' => 'bars',
-                '  foo' => 'bar',
-                '- nest' => [
-                    '  key' => 'value'
-                ],
-                '+ nest' => 'str'
-            ],
-            '- group2' => [
-                '  abc' => 12345,
-                '  deep' => [
-                    '  id' => 45
+            'group1' => [
+                'children' => [
+                    'baz' => [
+                        'changed' => [
+                            'from' => 'bas',
+                            'to' => 'bars'
+                        ]
+                    ],
+                    'foo' => [
+                        'unchanged' => 'bar'
+                    ],
+                    'nest' => [
+                        'changed' => [
+                            'from' => [
+                                'key' => 'value'
+                            ],
+                            'to' => 'str'
+                        ]
+                    ]
                 ]
             ],
-            '+ group3' => [
-                '  deep' => [
-                    '  id' => [
-                        '  number' => 45
+            'group2' => [
+                'removed' => [
+                    'abc' => 12345,
+                    'deep' => [
+                        'id' => 45
                     ]
-                ],
-                '  fee' => 100500
+                ]
+            ],
+            'group3' => [
+                'added' => [
+                    'deep' => [
+                        'id' => [
+                            'number' => 45
+                        ]
+                    ],
+                    'fee' => 100500
+                ]
             ]
         ];
 

@@ -7,13 +7,15 @@ namespace Tests\Unit;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-use function Hexlet\Code\Differ\Differ\fillPrefix;
 use function Hexlet\Code\Differ\Differ\diff;
-use function Hexlet\Code\Differ\Differ\sortResult;
 
-use const Hexlet\Code\Differ\Differ\PREFIX_NEW_VALUE;
-use const Hexlet\Code\Differ\Differ\PREFIX_OLD_VALUE;
-use const Hexlet\Code\Differ\Differ\PREFIX_UNCHANGED;
+use const Hexlet\Code\Differ\Differ\ADDED;
+use const Hexlet\Code\Differ\Differ\CHANGED;
+use const Hexlet\Code\Differ\Differ\CHANGED_FROM;
+use const Hexlet\Code\Differ\Differ\CHANGED_TO;
+use const Hexlet\Code\Differ\Differ\CHILDREN;
+use const Hexlet\Code\Differ\Differ\REMOVED;
+use const Hexlet\Code\Differ\Differ\UNCHANGED;
 
 class DifferTest extends TestCase
 {
@@ -24,35 +26,38 @@ class DifferTest extends TestCase
                 ['name' => 'some'],
                 ['name' => 'some', 'new' => 'line'],
                 [
-                    '  name' => 'some',
-                    '+ new' => 'line',
+                    'name' => [UNCHANGED => 'some'],
+                    'new' => [ADDED => 'line'],
                 ],
             ],
+
             [
                 ['name' => 'some'],
                 ['name' => 'new'],
                 [
-                    '- name' => 'some',
-                    '+ name' => 'new',
+                    'name' => [CHANGED => [CHANGED_FROM => 'some', CHANGED_TO => 'new']],
                 ],
             ],
+
             [
                 ['name' => 'some'],
                 ['new' => 'line'],
                 [
-                    '- name' => 'some',
-                    '+ new' => 'line',
+                    'name' => [REMOVED => 'some'],
+                    'new' => [ADDED => 'line'],
                 ],
             ],
+
             [
                 ['name' => 'some', 'old' => 'line'],
                 ['name' => 'some', 'new' => 'line'],
                 [
-                    '  name' => 'some',
-                    '+ new' => 'line',
-                    '- old' => 'line',
+                    'name' => [UNCHANGED => 'some'],
+                    'new' => [ADDED => 'line'],
+                    'old' => [REMOVED => 'line'],
                 ],
             ],
+
             [
                 [
                     'root1' => [
@@ -67,13 +72,16 @@ class DifferTest extends TestCase
                     ],
                 ],
                 [
-                    '  root1' => [
-                        '  name' => 'some',
-                        '+ new' => 'line',
-                        '- old' => 'line',
+                    'root1' => [
+                        CHILDREN => [
+                            'name' => [UNCHANGED => 'some'],
+                            'new' => [ADDED => 'line'],
+                            'old' => [REMOVED => 'line'],
+                        ]
                     ],
                 ],
             ],
+
             [
                 [
                     'root1' => [
@@ -89,14 +97,19 @@ class DifferTest extends TestCase
                     ],
                 ],
                 [
-                    '  root1' => [
-                        '  name' => 'some',
+                    'root1' => [
+                        CHILDREN => [
+                            'name' => [UNCHANGED => 'some'],
+                        ],
                     ],
-                    '+ root2' => [
-                        '  name' => 'some',
+                    'root2' => [
+                        ADDED => [
+                            'name' => 'some',
+                        ],
                     ],
                 ],
             ],
+
             [
                 [
                     'root1' => [
@@ -112,14 +125,19 @@ class DifferTest extends TestCase
                     ],
                 ],
                 [
-                    '  root1' => [
-                        '  name' => 'some',
+                    'root1' => [
+                        CHILDREN => [
+                            'name' => [UNCHANGED => 'some'],
+                        ],
                     ],
-                    '- root2' => [
-                        '  name' => 'some',
+                    'root2' => [
+                        REMOVED => [
+                            'name' => 'some',
+                        ],
                     ],
                 ],
             ],
+
             [
                 [
                     'root1' => [
@@ -140,16 +158,19 @@ class DifferTest extends TestCase
                     ],
                 ],
                 [
-                    '  root1' => [
-                        '  sub1' => [
-                            '  sub2' => [
-                                '- some' => 'name',
-                                '+ new' => 'name'
-                            ],
+                    'root1' => [
+                        CHILDREN => [
+                            'sub1' => [CHILDREN => [
+                                'sub2' => [CHILDREN => [
+                                    'some' => [REMOVED => 'name'],
+                                    'new' => [ADDED => 'name'],
+                                ]]
+                            ]],
                         ],
                     ],
                 ],
             ],
+
         ];
     }
 
@@ -160,108 +181,5 @@ class DifferTest extends TestCase
             $expectedResult,
             diff($old, $new)
         );
-    }
-
-    public function testSortDifference(): void
-    {
-        $data = [
-            '  b' => 'some',
-            '  e' => 'some',
-            '  a' => 'some',
-            '  g' => 'some',
-            '- f' => 'old',
-            '+ f' => 'new',
-            '- c' => 'old',
-            '+ c' => 'new',
-            '+ d' => 'some',
-        ];
-
-        self::assertEquals([
-            '  a' => 'some',
-            '  b' => 'some',
-            '- c' => 'old',
-            '+ c' => 'new',
-            '+ d' => 'some',
-            '  e' => 'some',
-            '- f' => 'old',
-            '+ f' => 'new',
-            '  g' => 'some',
-        ],
-            sortResult($data)
-        );
-    }
-
-    public function testSortDifferenceWithMultipleArray(): void
-    {
-        $data = [
-            '  b' => [
-                '  e' => [
-                    '- c' => 2,
-                    '  a' => 1,
-                    '+ c' => 3
-                ],
-                '  a' => [
-                    '  z' => 1,
-                    '  a' => 3,
-                ],
-                '  g' => [
-                    '+ b' => 2,
-                    '- a' => 10,
-                    '  q' => 3
-                ],
-            ],
-            '  a' => 'some'
-        ];
-
-        self::assertEquals([
-            '  a' => 'some',
-            '  b' => [
-                '  a' => [
-                    '  a' => 3,
-                    '  z' => 1,
-                ],
-                '  e' => [
-                    '  a' => 1,
-                    '- c' => 2,
-                    '+ c' => 3
-                ],
-                '  g' => [
-                    '- a' => 10,
-                    '+ b' => 2,
-                    '  q' => 3
-                ],
-            ],
-        ],
-            sortResult($data)
-        );
-    }
-
-    public static function prefixDataProvider(): array
-    {
-        return [
-            PREFIX_UNCHANGED,
-            PREFIX_OLD_VALUE,
-            PREFIX_NEW_VALUE
-        ];
-    }
-
-    #[DataProvider('prefixDataProvider')]
-    public function fillPrefixTest(string $prefix): void
-    {
-        $data = [
-            '..one' => [
-                '..two' => 2,
-                '..three' => 3,
-                '..four' => [
-                    '..five' => 5
-                ],
-            ],
-            '..six' => 6
-        ];
-
-        $testData = json_decode(str_replace('..', '', json_encode($data)), true);
-        $expectedData = json_decode(str_replace('..', $prefix, json_encode($data)), true);
-
-        self::assertEquals($expectedData, fillPrefix($testData, $prefix));
     }
 }

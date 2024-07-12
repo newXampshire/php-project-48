@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use function Hexlet\Code\Differ\Controllers\genDiff;
+use function Hexlet\Code\Differ\Controllers\generateDifference;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -21,7 +21,7 @@ DOC;
 
 $args = Docopt::handle($doc)->args;
 
-echo genDiff(
+echo generateDifference(
     $args['<firstFile>'],
     $args['<secondFile>'],
     $args['--format'],
