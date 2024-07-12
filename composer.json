@@ -21,7 +21,9 @@
             "src/Differ/Differ.php",
             "src/Formatters/StylishFormatter.php",
             "src/Formatters/PlainFormatter.php",
-            "src/Handlers/FileHandler.php"
+            "src/Formatters/JsonFormatter.php",
+            "src/Handlers/FileHandler.php",
+            "tests/Unit/Formatters/Helper.php"
         ]
     },
     "scripts": {

@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Functional;
+namespace Tests\Functional;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function Hexlet\Code\Differ\Controllers\generateDifference;
 
+use const Hexlet\Code\Differ\Controllers\FORMAT_JSON;
 use const Hexlet\Code\Differ\Controllers\FORMAT_PLAIN;
 use const Hexlet\Code\Differ\Controllers\FORMAT_STYLISH;
 
@@ -41,6 +42,15 @@ class MainTest extends TestCase
         self::assertEquals(
             file_get_contents(__DIR__ . '/../expected/plain/' . $expected),
             generateDifference($file1, $file2, FORMAT_PLAIN)
+        );
+    }
+
+    #[DataProvider('filesDataProvider')]
+    public function testGenDiffJson(string $file1, string $file2, string $expected): void
+    {
+        self::assertEquals(
+            file_get_contents(__DIR__ . '/../expected/json/' . $expected),
+            generateDifference($file1, $file2, FORMAT_JSON)
         );
     }
 }
