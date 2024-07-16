@@ -7,17 +7,17 @@ namespace Tests\Unit;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-use function Hexlet\Code\Differ\Differ\diff;
+use function Differ\Differ\buildDifference;
 
-use const Hexlet\Code\Differ\Differ\ADDED;
-use const Hexlet\Code\Differ\Differ\CHANGED;
-use const Hexlet\Code\Differ\Differ\CHANGED_FROM;
-use const Hexlet\Code\Differ\Differ\CHANGED_TO;
-use const Hexlet\Code\Differ\Differ\CHILDREN;
-use const Hexlet\Code\Differ\Differ\REMOVED;
-use const Hexlet\Code\Differ\Differ\UNCHANGED;
+use const Differ\Differ\ADDED;
+use const Differ\Differ\CHANGED;
+use const Differ\Differ\CHANGED_FROM;
+use const Differ\Differ\CHANGED_TO;
+use const Differ\Differ\CHILDREN;
+use const Differ\Differ\REMOVED;
+use const Differ\Differ\UNCHANGED;
 
-class DifferTest extends TestCase
+class DifferBuilderTest extends TestCase
 {
     public static function differDataProvider(): array
     {
@@ -179,7 +179,7 @@ class DifferTest extends TestCase
     {
         self::assertEquals(
             $expectedResult,
-            diff($old, $new)
+            buildDifference($old, $new)
         );
     }
 }

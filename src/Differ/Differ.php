@@ -2,50 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Hexlet\Code\Differ\Differ;
+namespace Differ\Differ;
 
-const CHILDREN = 'children';
+use Exception;
 
-const ADDED = 'added';
-const REMOVED = 'removed';
-const UNCHANGED = 'unchanged';
+use function Differ\Formatters\Json\format as jsonFormat;
+use function Differ\Formatters\Plain\format as plainFormat;
+use function Differ\Formatters\Stylish\format as stylishFormat;
+use function Differ\Handlers\parse;
 
-const CHANGED = 'changed';
-const CHANGED_FROM = 'from';
-const CHANGED_TO = 'to';
+const FORMAT_STYLISH = 'stylish';
+const FORMAT_PLAIN = 'plain';
+const FORMAT_JSON = 'json';
 
-function diff(array $old, array $new): array
+function genDiff(string $oldFileName, string $newFileName, string $format = FORMAT_STYLISH): string
 {
-    $result = [];
+    $result = buildDifference(parse($oldFileName), parse($newFileName));
 
-    foreach (array_diff_key($old, $new) as $key => $value) {
-        $result[$key] = [REMOVED => $value];
-    }
-
-    foreach (array_diff_key($new, $old) as $key => $value) {
-        $result[$key] = [ADDED => $value];
-    }
-
-    foreach (array_intersect_key($old, $new) as $key => $oldItem) {
-        $newItem = $new[$key];
-
-        if (is_array($oldItem) && is_array($newItem)) {
-            $result[$key][CHILDREN] = diff($oldItem, $newItem);
-            continue;
-        }
-
-        if ($oldItem === $newItem) {
-            $result[$key] = [UNCHANGED => $oldItem];
-            continue;
-        }
-
-        $result[$key] = [CHANGED => [
-            CHANGED_FROM => $oldItem,
-            CHANGED_TO => $newItem]
-        ];
-    }
-
-    ksort($result);
-
-    return $result;
+    /** @phpstan-ignore-next-line */
+    return match ($format) {
+        FORMAT_STYLISH => stylishFormat($result),
+        FORMAT_PLAIN => plainFormat($result),
+        FORMAT_JSON => jsonFormat($result)
+    };
 }

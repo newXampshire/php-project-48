@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Hexlet\Code\Differ\Formatters\Plain;
+namespace Differ\Formatters\Plain;
 
-use const Hexlet\Code\Differ\Differ\ADDED;
-use const Hexlet\Code\Differ\Differ\CHANGED;
-use const Hexlet\Code\Differ\Differ\CHANGED_FROM;
-use const Hexlet\Code\Differ\Differ\CHANGED_TO;
-use const Hexlet\Code\Differ\Differ\CHILDREN;
-use const Hexlet\Code\Differ\Differ\REMOVED;
-use const Hexlet\Code\Differ\Differ\UNCHANGED;
+use const Differ\Differ\ADDED;
+use const Differ\Differ\CHANGED;
+use const Differ\Differ\CHANGED_FROM;
+use const Differ\Differ\CHANGED_TO;
+use const Differ\Differ\CHILDREN;
+use const Differ\Differ\REMOVED;
+use const Differ\Differ\UNCHANGED;
 
 const FORMAT_ADDED = "Property '%s' was added with value: %s";
 const FORMAT_UPDATED = "Property '%s' was updated. From %s to %s";
@@ -20,11 +20,12 @@ function format(array $data, string $prefixKey = ''): string
 {
     $result = [];
 
+    /** @phpstan-ignore-next-line */
     foreach ($data as $key => $item) {
-        $key = $prefixKey . $key;
+        $key = $prefixKey . $key; /** @phpstan-ignore-line */
 
         if (array_key_exists(CHILDREN, $item)) {
-            $result[] = rtrim(format($item[CHILDREN], "$key."));
+            $result[] = rtrim(format($item[CHILDREN], "$key.")); /** @phpstan-ignore-line */
             continue;
         }
 
@@ -32,6 +33,7 @@ function format(array $data, string $prefixKey = ''): string
             continue;
         }
 
+        /** @phpstan-ignore-next-line */
         $result[] = match (true) {
             array_key_exists(REMOVED, $item) => sprintf(FORMAT_REMOVED, $key),
             array_key_exists(ADDED, $item) => sprintf(FORMAT_ADDED, $key, convert($item[ADDED])),

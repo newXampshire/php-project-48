@@ -14,14 +14,16 @@
     ],
     "autoload": {
         "psr-4": {
-            "Hexlet\\Code\\Differ\\": "src/"
+            "Differ\\": "src/"
         },
         "files": [
-            "src/Controllers/Controller.php",
             "src/Differ/Differ.php",
+            "src/Differ/DifferBuilder.php",
             "src/Formatters/StylishFormatter.php",
             "src/Formatters/PlainFormatter.php",
-            "src/Handlers/FileHandler.php"
+            "src/Formatters/JsonFormatter.php",
+            "src/Handlers/FileHandler.php",
+            "tests/Unit/Formatters/Helper.php"
         ]
     },
     "scripts": {
@@ -39,6 +41,9 @@
     "config": {
         "platform": {
             "php": "8.2"
+        },
+        "allow-plugins": {
+            "phpstan/extension-installer": false
         }
     }
 }
